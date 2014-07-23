@@ -1,0 +1,23 @@
+{
+    "name": "webtoucher/yii2-ampq",
+    "description": "Yii 2 extension for creating and running migrations",
+    "keywords": ["yii", "extension", "ampq", "RabbitMQ"],
+    "homepage": "https://github.com/webtoucher/yii2-ampq",
+    "type": "yii-extension",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Alexey Kuznetsov",
+            "email": "mirakuru@webtoucher.ru"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "videlalvaro/php-amqplib": "2.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "webtoucher\\ampq\\": ""
+        }
+    }
+}
