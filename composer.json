@@ -1,6 +1,6 @@
 {
     "name": "webtoucher/yii2-ampq",
-    "description": "Yii 2 extension for creating and running migrations",
+    "description": "Yii 2 extension wrapper to communicate with RabbitMQ server via AMQP. Based on videlalvaro/php-amqplib.",
     "keywords": ["yii", "extension", "ampq", "RabbitMQ"],
     "homepage": "https://github.com/webtoucher/yii2-ampq",
     "type": "yii-extension",
