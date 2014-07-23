@@ -1,4 +1,4 @@
-yii2-ampq
+yii2-amqp
 =========
 
 AMQP extension wrapper to communicate with RabbitMQ server. Based on [videlalvaro/php-amqplib](https://github.com/videlalvaro/php-amqplib).
@@ -29,7 +29,7 @@ return [
     'components' => [
         ...
         'amqp' => [
-            'class' => 'webtoucher\ampq\components\Ampq',
+            'class' => 'webtoucher\amqp\components\Amqp',
             'host' => '127.0.0.1',
             'port' => '5672',
             'login' =>'your_login',
