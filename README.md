@@ -31,8 +31,8 @@ return [
         'amqp' => [
             'class' => 'webtoucher\amqp\components\Amqp',
             'host' => '127.0.0.1',
-            'port' => '5672',
-            'login' => 'your_login',
+            'port' => 5672,
+            'user' => 'your_login',
             'password' => 'your_password',
             'vhost' => '/',
         ],
