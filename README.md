@@ -32,7 +32,7 @@ return [
             'class' => 'webtoucher\ampq\components\Ampq',
             'host' => '127.0.0.1',
             'port' => '5672',
-            'login' =>'your_login',
+            'login' => 'your_login',
             'password' => 'your_password',
             'vhost' => '/',
         ],
