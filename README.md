@@ -56,24 +56,22 @@ Example:
 
 namespace app\commands;
 
+use PhpAmqpLib\Message\AMQPMessage;
 use webtoucher\amqp\controllers\AmqpConsoleController;
 
 
 class RabbitController extends AmqpConsoleController
 {
     public function actionRun() {
-        $callback = function($msg) {
-            echo $msg->body, "\n";
-        };
+        $this->getAmqp()->listen('my_exchange', '#', function (AMQPMessage $msg) {
+            $this->process($msg);
+        });
+    }
 
-        list($queueName) = $this->channel->queue_declare();
-        $this->channel->queue_bind($queueName, 'my-topic', '#');
-        $this->channel->basic_consume($queueName, '', false, true, false, false, $callback);
-        while(count($this->channel->callbacks)) {
-            $this->channel->wait();
-        }
-        $this->channel->close();
-        $this->connection->close();
+    protected function process(AMQPMessage $msg) {
+        $message = json_decode($msg->body, true);
+        // todo: write message handler
+        print_r($message);
     }
 }
 ```
