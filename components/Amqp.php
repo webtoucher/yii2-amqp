@@ -9,10 +9,10 @@ namespace webtoucher\amqp\components;
 
 use yii\base\Component;
 use yii\base\Exception;
+use yii\helpers\Inflector;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-use yii\helpers\Inflector;
 
 
 /**
@@ -29,6 +29,11 @@ class Amqp extends Component
      * @var AMQPConnection
      */
     protected static $ampqConnection;
+
+    /**
+     * @var AMQPChannel[]
+     */
+    protected $channels = [];
 
     /**
      * @var string
@@ -93,6 +98,10 @@ class Amqp extends Component
      */
     public function getChannel($channel_id = null)
     {
-        return $this->connection->channel($channel_id);
+        $index = $channel_id ?: 'default';
+        if (!array_key_exists($index, $this->channels)) {
+            $this->channels[$index] = $this->connection->channel($channel_id);
+        }
+        return $this->channels[$index];
     }
 }
