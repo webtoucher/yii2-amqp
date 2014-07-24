@@ -45,13 +45,14 @@ trait AmqpTrait
     /**
      * Returns AMQP channel.
      *
+     * @param string $channel_id
      * @return AMQPChannel
      */
-    public function getChannel()
+    public function getChannel($channel_id = null)
     {
         if (empty($this->amqp)) {
             $this->amqp = Yii::$app->amqp;
         }
-        return $this->amqp->getChannel();
+        return $this->amqp->getChannel($channel_id);
     }
 }
