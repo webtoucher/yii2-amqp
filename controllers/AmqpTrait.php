@@ -17,6 +17,7 @@ use webtoucher\commands\Controller;
 /**
  * AMQP trait for controllers.
  *
+ * @property Amqp $amqp AMQP object.
  * @property AMQPConnection $connection AMQP connection.
  * @property AMQPChannel $channel AMQP channel.
  * @author Alexey Kuznetsov <mirakuru@webtoucher.ru>
@@ -27,7 +28,20 @@ trait AmqpTrait
     /**
      * @var Amqp
      */
-    public $amqp;
+    public $amqpContainer;
+
+    /**
+     * Returns AMQP object.
+     *
+     * @return Amqp
+     */
+    public function getAmqp()
+    {
+        if (empty($this->amqp)) {
+            $this->amqpContainer = Yii::$app->amqp;
+        }
+        return $this->amqpContainer;
+    }
 
     /**
      * Returns AMQP connection.
@@ -36,9 +50,6 @@ trait AmqpTrait
      */
     public function getConnection()
     {
-        if (empty($this->amqp)) {
-            $this->amqp = Yii::$app->amqp;
-        }
         return $this->amqp->getConnection();
     }
 
@@ -50,9 +61,6 @@ trait AmqpTrait
      */
     public function getChannel($channel_id = null)
     {
-        if (empty($this->amqp)) {
-            $this->amqp = Yii::$app->amqp;
-        }
         return $this->amqp->getChannel($channel_id);
     }
 }
