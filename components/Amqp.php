@@ -104,4 +104,20 @@ class Amqp extends Component
         }
         return $this->channels[$index];
     }
+
+    /**
+     * Listens exchange for messages.
+     *
+     * @param string $exchange
+     * @param string $routing_key
+     * @param callable $callback
+     */
+    public function listen($exchange, $routing_key, $callback) {
+        list($queueName) = $this->channel->queue_declare();
+        $this->channel->queue_bind($queueName, $exchange, $routing_key);
+        $this->channel->basic_consume($queueName, '', false, true, false, false, $callback);
+        while(count($this->channel->callbacks)) {
+            $this->channel->wait();
+        }
+    }
 }
