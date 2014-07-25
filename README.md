@@ -62,13 +62,15 @@ use webtoucher\amqp\controllers\AmqpConsoleController;
 
 class RabbitController extends AmqpConsoleController
 {
-    public function actionRun() {
+    public function actionRun()
+    {
         $this->amqp->listen('my_exchange', '#', function (AMQPMessage $msg) {
             $this->process($msg);
         });
     }
 
-    protected function process(AMQPMessage $msg) {
+    protected function process(AMQPMessage $msg)
+    {
         $message = json_decode($msg->body, true);
         // todo: write message handler
         print_r($message);
