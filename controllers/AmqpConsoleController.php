@@ -7,6 +7,7 @@
 
 namespace webtoucher\amqp\controllers;
 
+use webtoucher\amqp\components\AmqpTrait;
 use webtoucher\commands\Controller;
 
 

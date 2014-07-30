@@ -8,6 +8,7 @@
 namespace webtoucher\amqp\controllers;
 
 use yii\web\Controller;
+use webtoucher\amqp\components\AmqpTrait;
 
 
 /**

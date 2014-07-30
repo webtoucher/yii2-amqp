@@ -5,7 +5,7 @@
  * @license https://github.com/webtoucher/yii2-amqp/blob/master/LICENSE.md
  */
 
-namespace webtoucher\amqp\controllers;
+namespace webtoucher\amqp\components;
 
 use Yii;
 use PhpAmqpLib\Channel\AMQPChannel;
