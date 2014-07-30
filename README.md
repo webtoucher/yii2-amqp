@@ -39,47 +39,61 @@ return [
         ...
     ],
     ...
+    'controllerMap' => [
+        ...
+        'rabbit' => [
+            'class' => 'webtoucher\amqp\controllers\AmqpListenerController',
+            'interpreter' => 'app\components\RabbitInterpreter',
+            'exchange' => 'my-exchange',
+        ],
+        ...
+    ],
+    ...
 ];
 ```
 
-## Usage
-
-Just use for your web controllers class `webtoucher\amqp\controllers\AmqpConsoleController` instead of
-`yii\web\Controller` and for your console controllers class `webtoucher\amqp\controllers\AmqpConsoleController`
-instead of `yii\console\Controller`. AMQP connection will be available with property `connection`. AMQP channel
-will be available with property `channel`.
-
-Example:
+Add messages interpreter class `@app/components/RabbitInterpreter` with your handlers for different routing keys:
 
 ```php
 <?php
 
-namespace app\commands;
+namespace app\components;
 
-use PhpAmqpLib\Message\AMQPMessage;
-use webtoucher\amqp\controllers\AmqpConsoleController;
+use webtoucher\amqp\components\AmqpInterpreter;
 
 
-class RabbitController extends AmqpConsoleController
+class RabbitInterpreter extends AmqpInterpreter
 {
-    public function actionRun()
+    /**
+     * Interprets AMQP message with routing key 'hello_world'.
+     *
+     * @param array $message
+     */
+    public function readHelloWorld($message)
     {
-        $this->amqp->listen('my_exchange', '#', function (AMQPMessage $msg) {
-            $this->process($msg);
-        });
-    }
-
-    protected function process(AMQPMessage $msg)
-    {
-        $message = json_decode($msg->body, true);
         // todo: write message handler
-        print_r($message);
+        $this->log(print_r($message, true));
     }
 }
 ```
 
-You can start listening by follow command:
+## Usage
+
+Just run command
 
 ```bash
 $ php yii rabbit
 ```
+
+to listen all routing keys or
+
+```bash
+$ php yii rabbit my_routing_key
+```
+
+to listen one routing key.
+
+Also you can create controllers for your needs. Just use for your web controllers class
+`webtoucher\amqp\controllers\AmqpConsoleController` instead of `yii\web\Controller` and for your console controllers
+class `webtoucher\amqp\controllers\AmqpConsoleController` instead of `yii\console\Controller`. AMQP connection will be
+available with property `connection`. AMQP channel will be available with property `channel`.
