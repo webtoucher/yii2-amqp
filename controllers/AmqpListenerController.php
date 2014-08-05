@@ -62,7 +62,7 @@ class AmqpListenerController extends AmqpConsoleController
                 }
                 $interpreter->log(
                     sprintf("Unknown routing key '%s' for exchange '%s'.", $routingKey, $this->exchange),
-                    self::MESSAGE_ERROR
+                    $interpreter::MESSAGE_ERROR
                 );
             }
         });
