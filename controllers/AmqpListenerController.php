@@ -7,12 +7,13 @@
 
 namespace webtoucher\amqp\controllers;
 
-use PhpAmqpLib\Message\AMQPMessage;
 use yii\console\Exception;
+use yii\helpers\Inflector;
+use yii\helpers\Json;
+use PhpAmqpLib\Message\AMQPMessage;
 use webtoucher\amqp\components\AmqpInterpreter;
 use webtoucher\amqp\components\AmpqInterpreterInterface;
 use webtoucher\commands\Controller;
-use yii\helpers\Inflector;
 
 
 /**
@@ -29,13 +30,6 @@ class AmqpListenerController extends AmqpConsoleController
      * @var string
      */
     public $interpreter;
-
-    /**
-     * Listened exchange.
-     *
-     * @var string
-     */
-    public $exchange = 'exchange';
 
     public function actionRun($routingKey = '#')
     {
@@ -55,7 +49,7 @@ class AmqpListenerController extends AmqpConsoleController
             }
 
             if (method_exists($interpreter, $method)) {
-                $interpreter->$method(json_decode($msg->body, true));
+                $interpreter->$method(Json::decode($msg->body, true));
             } else {
                 if (empty($this->interpreter)) {
                     $interpreter = new AmqpInterpreter();
@@ -63,6 +57,10 @@ class AmqpListenerController extends AmqpConsoleController
                 $interpreter->log(
                     sprintf("Unknown routing key '%s' for exchange '%s'.", $routingKey, $this->exchange),
                     $interpreter::MESSAGE_ERROR
+                );
+                $interpreter->log(
+                    print_r(Json::decode($msg->body, true), true),
+                    $interpreter::MESSAGE_INFO
                 );
             }
         });

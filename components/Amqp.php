@@ -10,6 +10,7 @@ namespace webtoucher\amqp\components;
 use yii\base\Component;
 use yii\base\Exception;
 use yii\helpers\Inflector;
+use yii\helpers\Json;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -106,7 +107,31 @@ class Amqp extends Component
     }
 
     /**
-     * Listens exchange for messages.
+     * Sends message to the exchange.
+     *
+     * @param string $exchange
+     * @param string $routing_key
+     * @param string|array|AMQPMessage $message
+     * @return void
+     */
+    public function send($exchange, $routing_key, $message) {
+        if (empty($message)) {
+            throw new Exception('AMQP message can not be empty');
+        }
+        if (is_array($message)) {
+            $message = Json::encode($message);
+        }
+        if (is_string($message)) {
+            $message = new AMQPMessage($message);
+        }
+        $this->channel->basic_publish($message, $exchange, $routing_key);
+
+        $this->channel->close();
+        $this->connection->close();
+    }
+
+    /**
+     * Listens the exchange for messages.
      *
      * @param string $exchange
      * @param string $routing_key
@@ -119,5 +144,8 @@ class Amqp extends Component
         while(count($this->channel->callbacks)) {
             $this->channel->wait();
         }
+
+        $this->channel->close();
+        $this->connection->close();
     }
 }

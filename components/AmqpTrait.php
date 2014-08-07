@@ -28,7 +28,14 @@ trait AmqpTrait
     /**
      * @var Amqp
      */
-    public $amqpContainer;
+    protected $amqpContainer;
+
+    /**
+     * Listened exchange.
+     *
+     * @var string
+     */
+    public $exchange = 'exchange';
 
     /**
      * Returns AMQP object.
@@ -62,5 +69,17 @@ trait AmqpTrait
     public function getChannel($channel_id = null)
     {
         return $this->amqp->getChannel($channel_id);
+    }
+
+    /**
+     * Sends message to the current exchange.
+     *
+     * @param string $routing_key
+     * @param string|array|AMQPMessage $message
+     * @return void
+     */
+    public function send($routing_key, $message)
+    {
+        return $this->amqp->send($this->exchange, $routing_key, $message);
     }
 }
