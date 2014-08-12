@@ -43,8 +43,10 @@ return [
         ...
         'rabbit' => [
             'class' => 'webtoucher\amqp\controllers\AmqpListenerController',
-            'interpreter' => 'app\components\RabbitInterpreter',
-            'exchange' => 'my-exchange',
+            'interpreters' => [
+                'my-exchange' => 'app\components\RabbitInterpreter', // interpreters for each exchange
+            ],
+            'exchange' => 'my-exchange', // default exchange
         ],
         ...
     ],
@@ -85,13 +87,21 @@ Just run command
 $ php yii rabbit
 ```
 
-to listen all routing keys or
+to listen topics with any routing keys on default exchange or
 
 ```bash
 $ php yii rabbit my_routing_key
 ```
 
-to listen one routing key.
+to listen topics with one routing key.
+
+Run command
+
+```bash
+$ php yii rabbit my_routing_key direct --exchange=my_exchange
+```
+
+to listen direct messages on selected exchange.
 
 Also you can create controllers for your needs. Just use for your web controllers class
 `webtoucher\amqp\controllers\AmqpConsoleController` instead of `yii\web\Controller` and for your console controllers

@@ -20,4 +20,15 @@ use webtoucher\commands\Controller;
 abstract class AmqpConsoleController extends Controller
 {
     use AmqpTrait;
+
+    /**
+     * @inheritdoc
+     */
+    public function options($actionId)
+    {
+        return array_merge(
+            parent::options($actionId),
+            ['exchange']
+        );
+    }
 }

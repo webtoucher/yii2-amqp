@@ -44,7 +44,7 @@ trait AmqpTrait
      */
     public function getAmqp()
     {
-        if (empty($this->amqp)) {
+        if (empty($this->amqpContainer)) {
             $this->amqpContainer = Yii::$app->amqp;
         }
         return $this->amqpContainer;
@@ -72,14 +72,30 @@ trait AmqpTrait
     }
 
     /**
-     * Sends message to the current exchange.
+     * Sends message to the exchange.
      *
      * @param string $routing_key
      * @param string|array|AMQPMessage $message
+     * @param string $exchange
+     * @param string $type
      * @return void
      */
-    public function send($routing_key, $message)
+    public function send($routing_key, $message, $exchange = null, $type = Amqp::TYPE_TOPIC)
     {
-        return $this->amqp->send($this->exchange, $routing_key, $message);
+        $this->amqp->send($exchange ?: $this->exchange, $routing_key, $message, $type);
+    }
+
+    /**
+     * Sends message to the exchange and waits for answer.
+     *
+     * @param string $routing_key
+     * @param string|array|AMQPMessage $message
+     * @param integer $timeout Timeout in seconds.
+     * @param string $exchange
+     * @return string
+     */
+    public function ask($routing_key, $message, $timeout = 10, $exchange = null)
+    {
+        return $this->amqp->ask($exchange ?: $this->exchange, $routing_key, $message, $timeout);
     }
 }
