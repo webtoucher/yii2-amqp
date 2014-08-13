@@ -117,13 +117,15 @@ class Amqp extends Component
      * @param string $exchange
      * @param string $routing_key
      * @param string|array $message
-     * @param string $type
+     * @param string $type Use self::TYPE_DIRECT if it is an answer
      * @return void
      */
     public function send($exchange, $routing_key, $message, $type = self::TYPE_TOPIC)
     {
         $message = $this->prepareMessage($message);
-        $this->channel->exchange_declare($exchange, $type, false, false, false);
+        if ($type == self::TYPE_TOPIC) {
+            $this->channel->exchange_declare($exchange, $type, false, true, false);
+        }
         $this->channel->basic_publish($message, $exchange, $routing_key);
     }
 
@@ -138,7 +140,6 @@ class Amqp extends Component
      */
     public function ask($exchange, $routing_key, $message, $timeout)
     {
-        $this->channel->exchange_declare($exchange, self::TYPE_DIRECT, false, false, false);
         list ($queueName) = $this->channel->queue_declare('', false, false, true, false);
         $message = $this->prepareMessage($message, [
             'reply_to' => $queueName,
@@ -171,7 +172,9 @@ class Amqp extends Component
     public function listen($exchange, $routing_key, $callback, $type = self::TYPE_TOPIC)
     {
         list ($queueName) = $this->channel->queue_declare();
-        $this->channel->exchange_declare($exchange, $type, false, false, false);
+        if ($type == Amqp::TYPE_DIRECT) {
+            $this->channel->exchange_declare($exchange, $type, false, true, false);
+        }
         $this->channel->queue_bind($queueName, $exchange, $routing_key);
         $this->channel->basic_consume($queueName, '', false, true, false, false, $callback);
 
