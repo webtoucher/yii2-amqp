@@ -57,7 +57,7 @@ class AmqpListenerController extends AmqpConsoleController
             $info = [
                 'exchange' => $msg->get('exchange'),
                 'routing_key' => $msg->get('routing_key'),
-                'reply_to' => $msg->get('reply_to'),
+                'reply_to' => $msg->has('reply_to') ? $msg->get('reply_to') : null,
             ];
             $interpreter->$method(Json::decode($msg->body, true), $info);
         } else {
