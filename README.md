@@ -107,3 +107,45 @@ Also you can create controllers for your needs. Just use for your web controller
 `webtoucher\amqp\controllers\AmqpConsoleController` instead of `yii\web\Controller` and for your console controllers
 class `webtoucher\amqp\controllers\AmqpConsoleController` instead of `yii\console\Controller`. AMQP connection will be
 available with property `connection`. AMQP channel will be available with property `channel`.
+
+
+## Example usage round robin
+
+```php
+<?php
+namespace console\controllers;
+
+use webtoucher\amqp\components\Amqp;
+use Yii;
+use yii\console\Controller;
+
+class ExampleController extends Controller
+{
+	public function actionIndex($message = 'Wasap Man')
+	{
+		Yii::$app->amqp->send('my-exchange', 'HelloWorld', $message, Amqp::TYPE_DIRECT, true);
+	}
+}
+```
+
+run same listen consumers
+
+```bash
+1st$ php yii rabbit HelloWorld direct true
+```
+
+```bash
+2nd$ php yii rabbit HelloWorld direct true
+```
+
+send message from console controller
+
+```bash
+$ php yii example 
+```
+
+or
+
+```bash
+$ php yii example "same text"
+```

@@ -32,9 +32,9 @@ class AmqpListenerController extends AmqpConsoleController
      */
     public $interpreters = [];
 
-    public function actionRun($routingKey = '#', $type = Amqp::TYPE_TOPIC)
+    public function actionRun($routingKey = '#', $type = Amqp::TYPE_TOPIC, $roundRobin = false)
     {
-        $this->amqp->listen($this->exchange, $routingKey, [$this, 'callback'], $type);
+        $this->amqp->listen($this->exchange, $routingKey, [$this, 'callback'], $type, $roundRobin);
     }
 
     public function callback(AMQPMessage $msg)
