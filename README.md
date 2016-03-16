@@ -1,7 +1,7 @@
 yii2-amqp
 =========
 
-AMQP extension wrapper to communicate with RabbitMQ server. Based on [videlalvaro/php-amqplib](https://github.com/videlalvaro/php-amqplib).
+AMQP extension wrapper to communicate with RabbitMQ server. Based on [php-amqplib/php-amqplib](https://github.com/php-amqplib/php-amqplib).
 
 ## Installation
 
