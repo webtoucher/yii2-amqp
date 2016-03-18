@@ -59,7 +59,12 @@ class AmqpListenerController extends AmqpConsoleController
                 'routing_key' => $msg->get('routing_key'),
                 'reply_to' => $msg->has('reply_to') ? $msg->get('reply_to') : null,
             ];
-            $interpreter->$method(Json::decode($msg->body, true), $info);
+            try{
+                $body = Json::decode($msg->body, true);
+            } catch(\yii\base\InvalidParamException $e) {
+                $body = $msg->body;
+            }
+            $interpreter->$method($body, $info);
         } else {
             if (!isset($this->interpreters[$this->exchange])) {
                 $interpreter = new AmqpInterpreter();
