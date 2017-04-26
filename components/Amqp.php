@@ -114,18 +114,22 @@ class Amqp extends Component
     /**
      * Sends message to the exchange.
      *
-     * @param string $exchange
-     * @param string $routing_key
-     * @param string|array $message
-     * @param string $type Use self::TYPE_DIRECT if it is an answer
-     * @return void
-     */
-    public function send($exchange, $routing_key, $message, $type = self::TYPE_TOPIC)
+	 * @param $exchange
+	 * @param $routing_key
+	 * @param $message
+	 * @param string $type
+	 * @param bool $queueDeclare
+	 * @throws Exception
+	 */
+    public function send($exchange, $routing_key, $message, $type = self::TYPE_TOPIC, $queueDeclare = false)
     {
         $message = $this->prepareMessage($message);
         if ($type == self::TYPE_TOPIC) {
             $this->channel->exchange_declare($exchange, $type, false, true, false);
         }
+		if($queueDeclare)
+			$this->channel->queue_declare($routing_key, false, true, false, false);
+
         $this->channel->basic_publish($message, $exchange, $routing_key);
     }
 
@@ -163,15 +167,20 @@ class Amqp extends Component
 
     /**
      * Listens the exchange for messages.
-     *
-     * @param string $exchange
-     * @param string $routing_key
-     * @param callable $callback
-     * @param string $type
-     */
-    public function listen($exchange, $routing_key, $callback, $type = self::TYPE_TOPIC)
+	 *
+	 * @param $exchange
+	 * @param $routing_key
+	 * @param $callback
+	 * @param string $type
+	 * @param bool $roundRobin
+	 */
+    public function listen($exchange, $routing_key, $callback, $type = self::TYPE_TOPIC, $roundRobin = false)
     {
-        list ($queueName) = $this->channel->queue_declare();
+
+		list ($queueName) = ($roundRobin)
+			? $this->channel->queue_declare($routing_key, false, true, false, false)
+			: $this->channel->queue_declare();
+
         if ($type == Amqp::TYPE_DIRECT) {
             $this->channel->exchange_declare($exchange, $type, false, true, false);
         }
